@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bestanden</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+h1 {
+    color: #333;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+a {
+    text-decoration: none;
+    color: #0066cc;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<h1>Beschikbare bestanden</h1>
+
+<ul id="filelist">
+    <li>Bestanden laden...</li>
+</ul>
+
+<script>
+const owner = "USERNAME";
+const repo = "REPOSITORY";
+const path = "docs";
+
+const apiUrl =
+    `https://api.github.com/repos/${owner}/${repo}/contents/${path}`;
+
+fetch(apiUrl)
+    .then(response => response.json())
+    .then(files => {
+
+        const list = document.getElementById("filelist");
+        list.innerHTML = "";
+
+        files.forEach(file => {
+
+            if (file.type === "file") {
+
+                const li = document.createElement("li");
+
+                li.innerHTML =
+                    `<a href="${file.download_url}" target="_blank">
+                        ${file.name}
+                    </a>`;
+
+                list.appendChild(li);
+            }
+        });
+    })
+    .catch(error => {
+        document.getElementById("filelist").innerHTML =
+            "<li>Kan bestanden niet laden.</li>";
+        console.error(error);
+    });
+</script>
+
+</body>
+</html>
