@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Index</title>
+<title>Beschikbare pagina's</title>
 
 <style>
 body {
@@ -11,10 +11,11 @@ body {
     max-width: 900px;
     margin: 2rem auto;
     padding: 0 1rem;
+    line-height: 1.5;
 }
 
 h1 {
-    margin-bottom: 1rem;
+    color: #333;
 }
 
 ul {
@@ -23,18 +24,18 @@ ul {
 }
 
 li {
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 a {
     display: block;
-    padding: 0.75rem 0;
+    padding: 0.75rem;
     text-decoration: none;
     color: #0066cc;
 }
 
 a:hover {
-    background: #f5f5f5;
+    background-color: #f5f5f5;
 }
 </style>
 </head>
@@ -43,51 +44,17 @@ a:hover {
 <h1>Beschikbare pagina's</h1>
 
 <ul id="pages">
-    <li>Laden...</li>
+    <li>Pagina's laden...</li>
 </ul>
 
 <script>
+// VUL DEZE WAARDEN IN
 const owner = "pasajeros";
 const repo = "recepten";
 
-fetch(`https://api.github.com/repos/${owner}/${repo}/contents/`)
+const apiUrl =
+    `https://api.github.com/repos/${owner}/${repo}/contents`;
+
+fetch(apiUrl)
     .then(response => response.json())
-    .then(files => {
-
-        const pages = files
-            .filter(file =>
-                file.type === "file" &&
-                file.name.endsWith(".html") &&
-                file.name !== "index.html"
-            )
-            .sort((a, b) => a.name.localeCompare(b.name));
-
-        const ul = document.getElementById("pages");
-        ul.innerHTML = "";
-
-        if (pages.length === 0) {
-            ul.innerHTML = "<li>Geen HTML-bestanden gevonden.</li>";
-            return;
-        }
-
-        pages.forEach(page => {
-            const li = document.createElement("li");
-
-            li.innerHTML = `
-                <a href="${page.name}">
-                    📄 ${page.name.replace('.html', '')}
-                </a>
-            `;
-
-            ul.appendChild(li);
-        });
-    })
-    .catch(error => {
-        document.getElementById("pages").innerHTML =
-            "<li>Kon de directory niet lezen.</li>";
-        console.error(error);
-    });
-</script>
-
-</body>
-</html>
+    .then(files 
