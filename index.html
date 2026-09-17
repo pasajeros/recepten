@@ -57,4 +57,47 @@ const apiUrl =
 
 fetch(apiUrl)
     .then(response => response.json())
-    .then(files 
+    .then(files => {
+
+        const pages = files
+            .filter(file =>
+                file.type === "file" &&
+                file.name.endsWith(".html") &&
+                file.name.toLowerCase() !== "index.html"
+            )
+            .sort((a, b) => a.name.localeCompare(b.name));
+
+        const list = document.getElementById("pages");
+        list.innerHTML = "";
+
+        if (pages.length === 0) {
+            list.innerHTML =
+                "<li>Geen HTML-bestanden gevonden.</li>";
+            return;
+        }
+
+        pages.forEach(page => {
+
+            const li = document.createElement("li");
+
+            // Link naar GitHub Pages URL
+            const href = page.name;
+
+            li.innerHTML = `
+                <a href="${href}">
+                    📄 ${page.name.replace('.html', '')}
+                </a>
+            `;
+
+            list.appendChild(li);
+        });
+    })
+    .catch(error => {
+        console.error(error);
+        document.getElementById("pages").innerHTML =
+            "<li>Fout bij laden van bestanden.</li>";
+    });
+</script>
+
+</body>
+</html>
